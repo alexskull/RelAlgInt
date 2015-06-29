@@ -1,0 +1,3 @@
+Numero_prestamo(cadena);nombre_sucursal(cadena);importes(entero);valor(cadena)
+"P-10";"San";443;"hola"
+"P-09";"Cristobal";80;"mundo"

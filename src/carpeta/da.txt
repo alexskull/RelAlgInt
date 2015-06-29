@@ -1,0 +1,3 @@
+Numero_prestamo(cadena);nombre_sucursal(cadena);importe(entero)
+"P-11q";"Collado Medianoq";100
+"P-14q";"Centroq";1600

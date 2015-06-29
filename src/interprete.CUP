@@ -1,0 +1,407 @@
+import AST.*;
+
+terminal Integer numero;
+terminal String Palabra;
+terminal String Caracter;
+terminal String Fecha;
+terminal Sel;
+terminal Pro;
+terminal Uni;
+terminal Dif;
+terminal Proc;
+terminal Int;
+terminal And;
+terminal Or;
+terminal Not;
+terminal Eq;
+terminal Diferente;
+terminal Mayor;
+terminal Menor;
+terminal Mayorq;
+terminal PuntoComa;
+terminal Menorq;
+terminal ParentI;
+terminal ParentD;
+terminal Coma;
+terminal Punto;
+terminal Numero;
+terminal Multi;
+terminal Suma;
+terminal Resta;
+
+
+non terminal  Inicio;
+non terminal  NodoBase Exp;
+non terminal  NodoBase Exp2;
+non terminal  NodoPro Sentencia1;
+non terminal  NodoSel Sentencia2;
+non terminal  NodoBase Sentencia3;
+non terminal  NodoBase Tabla;
+non terminal  NodoBase Filtro_tipo_1;
+non terminal  NodoBase Filtro_tipo_2;
+non terminal  NodoBase Tipo_Filtro;
+non terminal  NodoOperacion Operacion_1;
+non terminal  NodoOperacion Operacion_2;
+non terminal  NodoOperacion Operacion_3;
+non terminal  NodoOperacionLogica Opc_Logica_1;
+non terminal  NodoOperacionLogica Opc_Logica_2;
+non terminal  NodoOperacionLogica Opc_Logica_3;
+non terminal  NodoTabla Tabla_nombre;
+non terminal  NodoSimbol Simbolo_1;
+non terminal  NodoSimbol Simbolo_2;
+non terminal  NodoArgumento Argumento; 
+non terminal  NodoColumna Columna; 
+non terminal  NodoValor Valor;
+
+
+precedence left	Uni, Int;
+precedence left	Dif;
+precedence left Proc;
+precedence left Pro, Sel;
+precedence left Or;
+precedence left And;
+precedence left Not;
+precedence left Eq, Diferente;
+precedence left Mayor, Menor, Mayorq, Menorq;
+precedence left Suma, Resta;
+precedence left Multi;
+precedence left ParentD, ParentI;
+
+
+
+Inicio ::= 
+	Exp :v 
+	{:
+		System.out.println("ASt creado correctamente");
+	:} PuntoComa ;
+
+Exp ::= 
+	Sentencia3:v
+		{:
+			
+			RESULT = v;
+		
+		:} 
+
+ |
+ 	ParentI Sentencia3:v ParentD 
+		{:
+			
+			RESULT = v;
+		
+		:} 
+
+ | 
+	Exp2:v
+		{:
+			
+			RESULT = v;
+			
+		:} 
+
+| 
+	ParentI Exp2:v ParentD
+		{:
+			
+			RESULT = v;
+			
+		:} 
+
+;
+
+Exp2 ::=
+	 Sentencia1:v
+		{:
+			RESULT = v;
+		:} 
+|
+	 Sentencia2:v
+		{:
+			RESULT = v;
+		:}	
+		
+;
+
+Sentencia1 ::=
+	Pro Argumento:Arg ParentI Tabla:tabla ParentD
+	{:
+	
+	 	RESULT =  new NodoPro(tabla,  Arg);
+	:}
+; 
+
+Argumento ::= 
+	Columna:v
+	{:
+		
+	 	RESULT = new NodoArgumento(v);
+	:} 
+|
+	Columna:columna Coma Argumento:arg
+
+	{:
+		NodoArgumento  a = new NodoArgumento(columna);
+	 
+	 	a.set_hijo(arg);
+	 	RESULT = a;
+	:}
+;
+
+
+
+Columna ::= 
+	Palabra:tabla Punto Palabra:columna
+	{:
+		RESULT = new 	NodoColumna(tabla,columna);	
+	:}
+| 
+	Palabra:columna
+	{:
+		RESULT = new	NodoColumna(columna);	
+	:}
+; 
+
+Sentencia2 ::= 
+	Sel ParentI Tabla:tabla ParentD
+	{:
+	
+		
+	 	RESULT = new NodoSel(tabla);
+	:}
+|
+	Sel Filtro_tipo_1:filtro ParentI Tabla:tabla ParentD
+	{:
+		RESULT =new NodoSel(tabla,filtro);
+	:}
+;   
+
+
+
+Filtro_tipo_1::=
+	Filtro_tipo_1:fil1 Opc_Logica_1:opc_log Filtro_tipo_1:fil2
+	{:
+	 opc_log.set_Izq(fil1);
+	 
+	 opc_log.set_Der(fil2);
+	 
+	 RESULT = opc_log;
+	:}
+|
+	Filtro_tipo_2:v
+		{:
+			RESULT =v;
+		:}
+ ;
+
+
+Filtro_tipo_2 ::= 
+	Tipo_Filtro:obj1 Simbolo_1:simbol Tipo_Filtro:obj2
+	{:
+		simbol.set_valor1(obj1);
+		simbol.set_valor2(obj2);
+		
+		RESULT = simbol;
+	:}
+	;
+ 
+
+	
+
+
+
+Tipo_Filtro::=
+	Valor:v
+	{:
+	
+		
+		RESULT = v;
+	:}
+|
+	Columna:v
+	{:
+	
+		
+		RESULT = v;
+	:}
+|
+	Exp:v
+	{:
+		
+		RESULT = v;
+	:}
+;
+
+
+Valor ::= 
+	Caracter:v
+	{:
+		
+	 	RESULT =new NodoValor ( v, 1);
+	:}
+|
+	Numero:v
+	{:
+	 	RESULT = new NodoValor ( v, 2);
+	:}
+| 
+	Fecha:v
+	{:
+	 	RESULT = new NodoValor (v , 3);
+	:}
+;
+
+Sentencia3 ::= 
+	Tabla:pri Operacion_1:op Tabla:sec
+	{:
+		op.Set_Izq(pri);
+		op.Set_Der(sec);
+		
+		RESULT = op;
+	:}
+|
+
+	ParentI Tabla:pri ParentD Operacion_1:op ParentI Tabla:sec ParentD
+	{:
+		op.Set_Izq(pri);
+		op.Set_Der(sec);
+		
+		RESULT = op;
+	:}
+;
+
+Tabla ::=
+	Tabla_nombre:v
+	{:
+	
+		
+		RESULT = v;
+	:}
+| 
+	Exp:v
+	{:
+	 	RESULT = v;
+	:}
+;
+
+Operacion_1 ::=
+	Uni:v
+	{:
+		RESULT = new NodoOperacion("Uni");
+	:}
+| 
+	Int:v
+	{:
+		RESULT = new NodoOperacion("Int");
+	:} 
+| 
+	Operacion_2:v
+	{:
+		RESULT = v;
+	:}; 
+
+Operacion_2 ::= 
+	Dif:v
+	{:
+		RESULT = new NodoOperacion("Dif");
+	:} 
+| 
+	Operacion_3:v
+	{:
+		RESULT = v;
+	:};
+
+Operacion_3 ::= 
+	Proc:v
+	{:
+		RESULT = new NodoOperacion("Proc");
+	:};
+
+Opc_Logica_1 ::= 
+	Or:v
+	{:
+		RESULT = new NodoOperacionLogica("Or");
+	:}
+
+
+|
+	Opc_Logica_2:v
+	{:
+		RESULT = v;
+	:}
+	;
+
+Opc_Logica_2 ::= 
+	And:v
+	{:
+		RESULT = new NodoOperacionLogica("And");
+	:}
+|
+	Opc_Logica_3:v
+	{:
+	RESULT = v;
+	:}
+;
+
+Opc_Logica_3 ::= 
+	Not:v
+	{:
+		RESULT = new NodoOperacionLogica("Not");
+	:}
+;
+
+Simbolo_1 ::= 
+	Eq:v
+	{:
+		RESULT = new NodoSimbol("Eq");
+	:}
+| 
+	Diferente:v
+	{:
+		RESULT = new NodoSimbol("Diferente");
+	:}
+| 
+	Simbolo_2:v
+	{:
+		RESULT = v;
+	:}
+;
+
+Simbolo_2 ::=
+	 Mayor:v
+	{:
+		RESULT = new NodoSimbol("Mayor");
+	:} 
+| 
+	Menor:v
+	{:
+		RESULT = new NodoSimbol("Menor");
+	:}
+| 
+	Mayorq:v
+	{:
+		RESULT = new NodoSimbol("Mayorq");
+	:}
+|
+	Menorq:v
+	{:
+		RESULT = new NodoSimbol("Menorq");
+	:}
+;
+
+
+
+Tabla_nombre ::= 
+	Palabra:nomb Palabra:alias
+	{:
+	 	RESULT = new NodoTabla(nomb,alias);
+	:} 
+| 
+	Palabra:nomb
+	{:
+		RESULT = new NodoTabla(nomb);
+	:}
+; 
+
+
+
+

@@ -1,0 +1,1 @@
+Numero_prestamo(cadena);nombre_sucursal(cadena);importe(entero)

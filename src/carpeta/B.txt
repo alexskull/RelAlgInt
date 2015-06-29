@@ -1,0 +1,4 @@
+Nomb(cadena);Edad(entero)
+"daniel";27
+"domingo";88
+"yogo";12

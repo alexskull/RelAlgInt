@@ -1,0 +1,3 @@
+Nomb(cadena);Apellido(cadena)
+"puto";"carlos"
+"mk";"rafael"

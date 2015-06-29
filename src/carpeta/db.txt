@@ -1,0 +1,4 @@
+Numero_prestamo(cadena);nombre_sucursal(cadena);importe(entero);valor(cadena)
+"P-11q";"hola rafael";100;"genesis"
+"P-11q";"Centroq";1700;"almeida"
+"P-11q";"Collado Medianoq";100;"mantilla"

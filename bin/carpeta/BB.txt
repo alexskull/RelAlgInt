@@ -1,0 +1,5 @@
+letra(cadena);list(entero)
+"f";1
+"a";2
+"r";4
+"a";1

@@ -1,0 +1,4 @@
+Nomb(cadena);Apellido(cadena);Sueldo(entero)
+"pepe";"carlos";700
+"luna";"hernandes";1500
+"mk";"rafael";1300
